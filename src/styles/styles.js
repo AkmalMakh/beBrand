@@ -152,7 +152,41 @@ header4: {
     fontFamily: 'Verdana',
     fontSize: 14, 
     marginBottom: 10,
+},
+settingsIcon: {
+  width: 35, 
+  height: 35,
+  marginRight: 10, 
+
+},
+mainHeader:{
+  marginTop: 10,
+  textAlign: 'center', 
+  flex: 1,
+  fontSize: 18,
+  fontWeight: 'bold',
+  color: '#888',
+  marginBottom: 7,
+  marginLeft:45,
+
+},
+dropDown:{
+  marginBottom: 5, 
+  flexDirection: 'row', 
+  alignItems: 'center', 
+  justifyContent: 'center',
+  borderTopWidth: 1, // Border top width
+  borderBottomWidth: 1, // Border bottom width
+  borderColor: 'grey',
+  paddingVertical: 5,
+},
+
+description: {
+  fontSize: 16,
+  textAlign: 'center',
+  paddingHorizontal: 20,
+},
 }
-}
+
 
 export default styles

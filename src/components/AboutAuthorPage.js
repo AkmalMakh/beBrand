@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import styles from '../styles/styles';
 
-const AboutUsPage = () => {
+const AboutAuthorPage = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>About Us</Text>
@@ -13,23 +14,4 @@ const AboutUsPage = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'white',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  description: {
-    fontSize: 16,
-    textAlign: 'center',
-    paddingHorizontal: 20,
-  },
-});
-
-export default AboutUsPage;
+export default AboutAuthorPage;

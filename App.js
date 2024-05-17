@@ -4,12 +4,15 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import WelcomePage from './src/components/WelcomePage';
-import AboutUsPage from './src/components/AboutUsPage';
 import SignInPage from './src/components/SignInPage';
 import SignUpPage from './src/components/SignUpPage';
 import ProfileScreen from './src/components/ProfileScreen';
 import ColorPage from './src/components/ColorPage';
 import ProfileDetailScreen from './src/components/ProfileDetailScreen';
+import SettingsPage from './src/components/Settings';
+import AboutAuthorPage from './src/components/AboutAuthorPage';
+import HowToUse from './src/components/HowToUse';
+import AboutColorTyping from './src/components/AboutColorTyping';
 
 const Stack = createStackNavigator();
 
@@ -18,12 +21,15 @@ function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Welcome">
         <Stack.Screen name="Welcome" component={WelcomePage} />
-        <Stack.Screen name="AboutUs" component={AboutUsPage} />
         <Stack.Screen name="SignIn" component={SignInPage} />
         <Stack.Screen name="SignUp" component={SignUpPage} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
         <Stack.Screen name="ColorPage" component={ColorPage} />
         <Stack.Screen name="Details" component={ProfileDetailScreen} />
+        <Stack.Screen name="Settings" component={SettingsPage} />
+        <Stack.Screen name="AboutAuthor" component={AboutAuthorPage} />
+        <Stack.Screen name="HowToUse" component={HowToUse} />
+        <Stack.Screen name="AboutColor" component={AboutColorTyping} />
       </Stack.Navigator>
     </NavigationContainer>
   );

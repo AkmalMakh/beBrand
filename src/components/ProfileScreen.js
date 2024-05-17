@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import styles from '../styles/styles';
 
 
+
 const ProfileScreen = ({ route }) => {
   const navigation = useNavigation(); // Access navigation prop using useNavigation hook  
   const {fullName, country, avatar } = route.params;
@@ -20,10 +21,10 @@ const ProfileScreen = ({ route }) => {
   return (
     <View style={styles.container}>
         
-        <View style={{ marginBottom: 24, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-  <Text style={[styles.subHeader, { marginTop: 10, textAlign: 'center', flex: 1 }]}>Color Passport</Text>
-  <TouchableOpacity onPress={() => navigation.navigate('Details')} style={{ marginLeft: 10 }}>
-    <Image source={require('../../assets/images/settings1.png')} style={{ width: 50, height: 50 }} />
+  <View style={styles.dropDown}>
+  <Text style={[styles.mainHeader]}>Color Passport</Text>
+  <TouchableOpacity onPress={() => navigation.navigate('Settings')} style={{ marginLeft: 10 }}>
+    <Image source={require('../../assets/images/sett.png')} style={styles.settingsIcon} />
   </TouchableOpacity>
 </View>
       <ScrollView

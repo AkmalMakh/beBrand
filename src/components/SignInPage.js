@@ -2,22 +2,39 @@ import React, { useState } from 'react';
 import styles from '../styles/styles';
 import { View, Text,Button, TextInput, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import firebase from '../firebase/firebaseConfig';
 
 const SignInPage = () => {
   const navigation = useNavigation(); // Access navigation prop using useNavigation hook
 
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false); // Add isLoading state
 
-  const handleSignIn = () => {
+  const handleSignIn = async () => {
     // Implement sign-in logic here
-    
     //[TODO] temp data 
     fullName = 'Akmal Makhmudov'
     country = 'Uzbekistan'
     image = '../../assets/images/iconAvatar.png'
-    // After successful registration, navigate to Profile Screen
-    navigation.navigate('Profile', { fullName, country, avatar: image });
+
+    if (!email || !password) {
+      alert('Please fill in all fields.');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      await firebase.auth().signInWithEmailAndPassword(email, password);
+      // After successful registration, navigate to Profile Screen
+      navigation.navigate('Profile', { fullName, country, avatar: image });
+    } catch (error) {
+      console.error(error);
+      alert('Login failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -26,8 +43,8 @@ const SignInPage = () => {
       <TextInput
         style={styles.input}
         placeholder="Username"
-        onChangeText={text => setUsername(text)}
-        value={username}
+        onChangeText={text => setEmail(text)}
+        value={email}
       />
       <TextInput
         style={styles.input}
