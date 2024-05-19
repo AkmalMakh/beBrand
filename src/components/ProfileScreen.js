@@ -1,61 +1,112 @@
-import React from 'react';
-import { View, Text, Image, ScrollView, TouchableOpacity} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
 import styles from '../styles/styles';
+import {View, Text, Image, ScrollView, TouchableOpacity, ActivityIndicator} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {auth, firestore} from '../firebase/firebaseConfig'; 
 
 
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+const ProfileScreen = () => {
+  const navigation = useNavigation();
+  const [loading, setLoading] = useState(true);
+  const [userData, setUserData] = useState(null);
+  const [colors, setColors] = useState(null);
+  
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        // Get the current authenticated user
+        const currentUser = auth.currentUser;
 
-const ProfileScreen = ({ route }) => {
-  const navigation = useNavigation(); // Access navigation prop using useNavigation hook  
-  const {fullName, country, avatar } = route.params;
-  // Define colors for the boxes
-  const colors = [
-        '#824A4A', '#D18787', '#7EB26C', '#B94747', '#FF00FF', '#00FFFF', '#FFA500',
-        '#FF1493', '#800080', '#00FA9A', '#D18787', '#FF9595', '#FFC0CB', '#8A2BE2',
-        '#FF6347', '#00CED1', '#7FFFD4', '#000080', '#F08080', '#7FFF00', '#A52A2A',
-        '#008080', '#DAA520', '#20B2AA', '#B0C4DE', '#BC8F8F', '#6495ED', '#FF4500',
-        '#2E8B57', '#FFD700', '#8B4513', '#00BFFF', '#4169E1', 
-      ];
+        if (currentUser) {
+          const userId = currentUser.uid;
+
+          // Fetch the user document from Firestore using the authenticated user's ID
+          const userDoc = await firestore.collection('Users').doc(userId).get();
+          const userColor = await firestore.collection('ColorPlates').doc(userId).get();
+
+          if (userColor.exists) {
+            setColors(userColor.data().colors);
+          } 
+          if (userDoc.exists) {
+            setUserData(userDoc.data());
+          }
+        } else {
+          console.log('No authenticated user found!');
+        }
+      } catch (error) {
+        console.error('Error fetching user data: ', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+      fetchUserData();
+    }, []);
+
+  if (loading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+  const {fullName, colorPassportNumber, country} = userData;
   // Manually define screen width
   const screenWidth = 375; // Replace with your screen width
   return (
     <View style={styles.container}>
-        
-  <View style={styles.dropDown}>
-  <Text style={[styles.mainHeader]}>Color Passport</Text>
-  <TouchableOpacity onPress={() => navigation.navigate('Settings')} style={{ marginLeft: 10 }}>
-    <Image source={require('../../assets/images/sett.png')} style={styles.settingsIcon} />
-  </TouchableOpacity>
-</View>
-      <ScrollView
-       contentContainerStyle={[styles.scrollViewContent, { width: screenWidth }]}
-        showsVerticalScrollIndicator={true}
-      >
-    <View style={styles.containerAv}>
-      <Image source={require('../../assets/images/akmal.png')} style={styles.avatar} />
-      <View style={styles.textContainer}>
-        <Text style={styles.header}>{fullName}</Text>
-        <Text style={styles.subHeader}>Country: {country}</Text>
-        <Text style={styles.subHeader}>Passport Number: 00000</Text>
+      <View style={styles.dropDown}>
+        <Text style={[styles.mainHeader]}>Color Passport</Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Settings')}
+          style={{marginLeft: 10}}>
+          <Image
+            source={require('../../assets/images/sett.png')}
+            style={styles.settingsIcon}
+          />
+        </TouchableOpacity>
       </View>
-    </View>
-              
-        <TouchableOpacity style={[styles.buttonSecondary, {paddingHorizontal: 90, paddingVertical: 10,  marginBottom: 15}]} 
-                        onPress={() => navigation.navigate('Details')}>
-            <Text style={[styles.buttonTextSecondary, {textAlign: 'center',}]}>LEARN MORE</Text>
+      <ScrollView
+        contentContainerStyle={[styles.scrollViewContent, {width: screenWidth}]}
+        showsVerticalScrollIndicator={true}>
+        <View style={styles.containerAv}>
+          <Image
+            source={require('../../assets/images/akmal.png')}
+            style={styles.avatar}
+          />
+          <View style={styles.textContainer}>
+            <Text style={styles.header}>{fullName}</Text>
+            <Text style={styles.subHeader}>Country: {country}</Text>
+            <Text style={styles.subHeader}>Passport Number: {colorPassportNumber}</Text>
+          </View>
+        </View>
+
+        <TouchableOpacity
+          style={[
+            styles.buttonSecondary,
+            {paddingHorizontal: 90, paddingVertical: 10, marginBottom: 15, marginTop: 10},
+          ]}
+          onPress={() => navigation.navigate('Details')}>
+          <Text style={[styles.buttonTextSecondary, {textAlign: 'center'}]}>
+            LEARN MORE
+          </Text>
         </TouchableOpacity>
         <View>
-            <Text style={[styles.header]}>COLOR PLATE</Text>
+          <Text style={[styles.header]}>COLOR PLATE</Text>
         </View>
-         <View style={styles.gridContainer}>
-          {Array.from(Array(11).keys()).map((row) => (
+        <View style={styles.gridContainer}>
+          {Array.from(Array(11).keys()).map(row => (
             <View key={row} style={styles.row}>
-              {Array.from(Array(3).keys()).map((col) => (
+              {Array.from(Array(3).keys()).map(col => (
                 <TouchableOpacity
                   key={`${row}-${col}`}
-                  onPress={() => navigation.navigate('ColorPage', { color: colors[row * 3 + col] })}
-                >
-                  <View style={[styles.box, { backgroundColor: colors[row * 3 + col] }]}>
+                  onPress={() =>
+                    navigation.navigate('ColorPage', {
+                      color: colors[row * 3 + col],
+                    })
+                  }>
+                  <View
+                    style={[
+                      styles.box,
+                      {backgroundColor: colors[row * 3 + col]},
+                    ]}>
                     <Text style={styles.hexText}>{colors[row * 3 + col]}</Text>
                   </View>
                 </TouchableOpacity>
