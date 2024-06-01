@@ -10,10 +10,10 @@ import {
   Platform,
 } from 'react-native';
 import styles from '../styles/styles';
-import firebase, {firestore} from '../firebase/firebaseConfig';
+import firebase, {firestore, storage} from '../firebase/firebaseConfig';
 import colors from './shared/Colors';
-
-
+import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
+import {uriToBlob } from './shared/CompressImageUtil'; 
 
 
 
@@ -41,14 +41,11 @@ const SignUpPage = () => {
       alert('Please fill in all fields.');
       return;
     }
-
     if (password !== confirmPassword) {
       alert('Passwords do not match.');
       return;
     }
-
-    setIsLoading(true); // Show loading indicator
-
+    setIsLoading(true);
     try {
       const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
 
@@ -63,7 +60,7 @@ const SignUpPage = () => {
         country: country,
         colorPassportNumber: "00002",
         email: email,
-        // You can add other fields here as needed
+        profileImage: profileImage
       };
 
       // Add user data to Firestore
@@ -72,15 +69,8 @@ const SignUpPage = () => {
       await firestore.collection('ColorPlates').doc(userId).set({
         colors: colors
       });
-      console.log("data before save ",colorData.bonusColors)
-      // await firestore().collection('ColorData').doc(userId).set({
-      //   mutedColors: colorData.mutedColors,
-      //   depthLevelColors: colorData.depthLevelColors,
-      //   temperatureColors: colorData.temperatureColors,
-      //   saturationColors: colorData.saturationColors,
-      //   bonusColors: colorData.bonusColors,
-      // });
       await firestore.collection('ColorData').doc(userId).set(colorData);
+      saveImageToStorage(userId);
       alert('Signup successful!');
       // Navigate to main app screen or handle success
       navigation.navigate('Profile');
@@ -88,18 +78,52 @@ const SignUpPage = () => {
       console.error(error);
       alert('Signup failed. Please try again.');
     } finally {
-      setIsLoading(false); // Hide loading indicator
+      setIsLoading(false);
     }
   };
+const saveImageToStorage =  async(userId) =>{
+    const uploadUri = Platform.OS === 'ios' ? profileImage.replace('file://', '') : profileImage;
+    const fileName = `profileImages/${userId}.jpg`;
+    const reference = firebase.storage().ref(fileName);
+    console.log("Before Download url");
+    try {
+      const blob = await uriToBlob(uploadUri);
+      await reference.put(blob);
+      const downloadURL = await reference.getDownloadURL();
+      console.log("Download url", downloadURL);
+      setProfileImage(downloadURL); 
+    } catch (error) {
+      console.error('Image upload error: ', error);
+    }
+  }
+  const openImagePicker = () => {
+    const options = {
+      mediaType: 'photo',
+      maxWidth: 100,
+      maxHeight: 100,
+      quality: 0.8,
+    };
+    launchImageLibrary(options, async (response) => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.errorCode) {
+        console.log('ImagePicker Error: ', response.errorMessage);
+      } else if (response.assets && response.assets.length > 0) {
+        const compressedImageUri = response.assets[0].uri;
+        console.log("Before ");
+        setProfileImage(compressedImageUri); 
 
+      }
+    });
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Create your account</Text>
-      <TouchableOpacity style={styles.avatarContainer}>
+      <TouchableOpacity style={styles.avatarContainer} onPress={openImagePicker}>
         <Image
           source={
             profileImage
-              ? {uri: profileImage}
+              ? { uri: profileImage }
               : require('../../assets/images/iconAvatar.png')
           }
           style={styles.avatar}

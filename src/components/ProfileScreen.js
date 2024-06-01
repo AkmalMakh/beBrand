@@ -3,10 +3,10 @@ import styles from '../styles/styles';
 import {View, Text, Image, ScrollView, TouchableOpacity, ActivityIndicator} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {auth, firestore} from '../firebase/firebaseConfig'; 
+import { useTranslation } from 'react-i18next';
 
-
-const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const ProfileScreen = () => {
+  const { t } = useTranslation();
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState(null);
@@ -47,13 +47,14 @@ const ProfileScreen = () => {
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
-  const {fullName, colorPassportNumber, country} = userData;
+  const {fullName, colorPassportNumber,profileImage, country} = userData;
+  console.log("Why", profileImage)
   // Manually define screen width
   const screenWidth = 375; // Replace with your screen width
   return (
     <View style={styles.container}>
       <View style={styles.dropDown}>
-        <Text style={[styles.mainHeader]}>Color Passport</Text>
+        <Text style={[styles.mainHeader]}>{t('color passport')}</Text>
         <TouchableOpacity
           onPress={() => navigation.navigate('Settings')}
           style={{marginLeft: 10}}>
@@ -67,14 +68,17 @@ const ProfileScreen = () => {
         contentContainerStyle={[styles.scrollViewContent, {width: screenWidth}]}
         showsVerticalScrollIndicator={true}>
         <View style={styles.containerAv}>
-          <Image
-            source={require('../../assets/images/akmal.png')}
+         { profileImage != null ?<Image
+            source={{ uri: profileImage }}
             style={styles.avatar}
-          />
+          /> : <Image
+          source={require('../../assets/images/akmal.png')}
+          style={styles.avatar}
+        />}
           <View style={styles.textContainer}>
             <Text style={styles.header}>{fullName}</Text>
-            <Text style={styles.subHeader}>Country: {country}</Text>
-            <Text style={styles.subHeader}>Passport Number: {colorPassportNumber}</Text>
+            <Text style={styles.subHeader}>{t('country')}: {country}</Text>
+            <Text style={styles.subHeader}>{t('passport number')}: {colorPassportNumber}</Text>
           </View>
         </View>
 
@@ -85,11 +89,11 @@ const ProfileScreen = () => {
           ]}
           onPress={() => navigation.navigate('Details')}>
           <Text style={[styles.buttonTextSecondary, {textAlign: 'center'}]}>
-            LEARN MORE
+            {t('learn more')}
           </Text>
         </TouchableOpacity>
         <View>
-          <Text style={[styles.header]}>COLOR PLATE</Text>
+          <Text style={[styles.header]}>{t('color plate')}</Text>
         </View>
         <View style={styles.gridContainer}>
           {Array.from(Array(11).keys()).map(row => (

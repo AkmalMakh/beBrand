@@ -2,6 +2,7 @@ import 'react-native-gesture-handler';
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import './src/components/shared/i18n';
 
 import WelcomePage from './src/components/WelcomePage';
 import SignInPage from './src/components/SignInPage';
@@ -13,6 +14,7 @@ import SettingsPage from './src/components/Settings';
 import AboutAuthorPage from './src/components/AboutAuthorPage';
 import HowToUse from './src/components/HowToUse';
 import AboutColorTyping from './src/components/AboutColorTyping';
+import ChangePasswordScreen from './src/components/PasswordChange';
 
 const Stack = createStackNavigator();
 
@@ -30,6 +32,7 @@ function App() {
         <Stack.Screen name="AboutAuthor" component={AboutAuthorPage} />
         <Stack.Screen name="HowToUse" component={HowToUse} />
         <Stack.Screen name="AboutColor" component={AboutColorTyping} />
+        <Stack.Screen name="PasswordChange" component={ChangePasswordScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -11,8 +11,10 @@ import {useNavigation} from '@react-navigation/native';
 import styles from '../styles/styles';
 import ColorSection from './shared/ColorSection';
 import {auth, firestore} from '../firebase/firebaseConfig'; 
+import { useTranslation } from 'react-i18next';
 
 const ProfileDetailScreen = () => {
+  const { t } = useTranslation();
   const navigation = useNavigation(); 
   const screenWidth = Dimensions.get('window').width;
   const [colorsDb, setColorsDb] = useState(null);
@@ -50,18 +52,17 @@ const ProfileDetailScreen = () => {
         contentContainerStyle={[styles.scrollViewContent, {width: screenWidth}]}
         showsVerticalScrollIndicator={true}>
         <ColorSection
-          header="LEADING CHARACTERISTICS:"
-          subHeader="MUTED"
-          description="Complex, dusty colors are suitable for you"
+          header={t('leading characteristics')}
+          subHeader={t('muted')}
+          description={t('leading info')}
           colors={colorsDb.mutedColors}
           navigation={navigation}
         />
 
         {/* [TO DO] make sure to move it to component  */}
-        <Text style={[styles.header2]}>COLOR DEPTH LEVEL</Text>
+        <Text style={[styles.header2]}>{t('color depth level')}</Text>
         <Text style={[styles.header4]}>
-          This is what the gradation of the depth of your colors looks like:
-          from lightest to darkest
+        {t('color depth info')}
         </Text>
         <View style={styles.row}>
           {Array.from(Array(5).keys()).map(index => (
@@ -89,23 +90,22 @@ const ProfileDetailScreen = () => {
         </View>
 
         <ColorSection
-          header="TEMPERATURE:"
-          subHeader="FLOATING"
-          description="The temperature doesn't matter for your appearance; both warm and cool colors suit you"
+          header={t('temperature')}
+          subHeader={t('floating')}
+          description={t('temperature info')}
           colors={colorsDb.temperatureColors}
           navigation={navigation}
         />
         <ColorSection
-          header="COLOR SATURATION:"
-          subHeader="SUBDUED"
-          description="Low color intensity is important for your appearance"
+          header={t('color saturation')}
+          subHeader={t('subdued')}
+          description={t('color sat info')}
           colors={colorsDb.saturationColors}
           navigation={navigation}
         />
-        <Text style={[styles.header2]}>BONUS COLORS:</Text>
+        <Text style={[styles.header2]}>*{t('bonus colors')}</Text>
         <Text style={[styles.header4]}>
-          Colors that do not meet the criteria of the color passport but can be
-          presented in your portrain zone.{' '}
+        {t('color bonus info')}.{' '}
         </Text>
         <TouchableOpacity
           key={1}

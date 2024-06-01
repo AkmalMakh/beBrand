@@ -29,10 +29,10 @@ const SignInPage = () => {
     try {
       await firebase.auth().signInWithEmailAndPassword(email, password);
       // After successful registration, navigate to Profile Screen
-      navigation.navigate('Profile', {fullName, country, avatar: image});
+      navigation.navigate('Profile');
     } catch (error) {
       console.error(error);
-      alert('Login failed. Please try again.');
+      alert('Login failed. Please check email or password');
     } finally {
       setIsLoading(false);
     }
