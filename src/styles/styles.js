@@ -129,7 +129,12 @@ const styles = {
   },
   hexText: {
     fontSize: 12,
-    color: 'white',
+    color: 'black',
+
+  },
+  hexTextBox: {
+    marginTop: 10, // Space between the box and the text
+    fontSize: 16, // Adjust font size as needed
   },
   header2: {
     fontSize: 22,

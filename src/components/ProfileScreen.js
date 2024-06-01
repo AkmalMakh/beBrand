@@ -4,6 +4,7 @@ import {View, Text, Image, ScrollView, TouchableOpacity, ActivityIndicator} from
 import {useNavigation} from '@react-navigation/native';
 import {auth, firestore} from '../firebase/firebaseConfig'; 
 import { useTranslation } from 'react-i18next';
+import { ColorGrid } from './shared/ColorSection';
 
 const ProfileScreen = () => {
   const { t } = useTranslation();
@@ -95,29 +96,7 @@ const ProfileScreen = () => {
         <View>
           <Text style={[styles.header]}>{t('color plate')}</Text>
         </View>
-        <View style={styles.gridContainer}>
-          {Array.from(Array(11).keys()).map(row => (
-            <View key={row} style={styles.row}>
-              {Array.from(Array(3).keys()).map(col => (
-                <TouchableOpacity
-                  key={`${row}-${col}`}
-                  onPress={() =>
-                    navigation.navigate('ColorPage', {
-                      color: colors[row * 3 + col],
-                    })
-                  }>
-                  <View
-                    style={[
-                      styles.box,
-                      {backgroundColor: colors[row * 3 + col]},
-                    ]}>
-                    <Text style={styles.hexText}>{colors[row * 3 + col]}</Text>
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </View>
-          ))}
-        </View>
+         <ColorGrid colors={colors} navigation={navigation} />
       </ScrollView>
     </View>
   );

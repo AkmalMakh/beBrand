@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import styles from '../styles/styles';
-import ColorSection from './shared/ColorSection';
+import {ColorSection, ColorDepthSection} from './shared/ColorSection';
 import {auth, firestore} from '../firebase/firebaseConfig'; 
 import { useTranslation } from 'react-i18next';
 
@@ -58,36 +58,11 @@ const ProfileDetailScreen = () => {
           colors={colorsDb.mutedColors}
           navigation={navigation}
         />
-
-        {/* [TO DO] make sure to move it to component  */}
-        <Text style={[styles.header2]}>{t('color depth level')}</Text>
-        <Text style={[styles.header4]}>
-        {t('color depth info')}
-        </Text>
-        <View style={styles.row}>
-          {Array.from(Array(5).keys()).map(index => (
-            <TouchableOpacity
-              key={index}
-              onPress={() =>
-                navigation.navigate('ColorPage', {color: colorsDb.depthLevelColors[index]})
-              }>
-              <View
-                style={[
-                  styles.box,
-                  {
-                    borderRadius: 10,
-                    height: 50,
-                    width: 50,
-                    backgroundColor: colorsDb.depthLevelColors[index],
-                  },
-                ]}>
-                <Text style={[styles.hexText, {fontSize: 11}]}>
-                  {colorsDb.depthLevelColors[index]}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
+        <ColorDepthSection 
+         header={t('color depth level')}
+         description={t('color depth info')}
+         colors={colorsDb.depthLevelColors}
+         navigation={navigation}/>
 
         <ColorSection
           header={t('temperature')}
@@ -103,26 +78,12 @@ const ProfileDetailScreen = () => {
           colors={colorsDb.saturationColors}
           navigation={navigation}
         />
-        <Text style={[styles.header2]}>*{t('bonus colors')}</Text>
-        <Text style={[styles.header4]}>
-        {t('color bonus info')}.{' '}
-        </Text>
-        <TouchableOpacity
-          key={1}
-          onPress={() => navigation.navigate('ColorPage', {color: colorsDb.bonusColors[1]})}>
-          <View
-            style={[
-              styles.box,
-              {
-                borderRadius: 10,
-                height: 50,
-                width: 50,
-                backgroundColor: colorsDb.bonusColors[1],
-              },
-            ]}>
-            <Text style={[styles.hexText, {fontSize: 11}]}>{colorsDb.bonusColors[1]}</Text>
-          </View>
-        </TouchableOpacity>
+        <ColorDepthSection 
+         header={t('bonus colors')}
+         description={t('color bonus info')}
+         colors={colorsDb.bonusColors}
+         navigation={navigation}/>
+         
       </ScrollView>
     </View>
   );
