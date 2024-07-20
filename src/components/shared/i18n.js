@@ -1,7 +1,7 @@
 import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
+import {initReactI18next} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import 'intl-pluralrules'
+import 'intl-pluralrules';
 
 // Import your translations
 import en from './locales/en.json';
@@ -11,14 +11,14 @@ import ru from './locales/ru.json';
 const languageDetector = {
   type: 'languageDetector',
   async: true,
-  detect: async (callback) => {
+  detect: async callback => {
     const savedDataJSON = await AsyncStorage.getItem('user-language');
     const lng = savedDataJSON ? savedDataJSON : null;
     const selectLanguage = lng || 'en';
     callback(selectLanguage);
   },
   init: () => {},
-  cacheUserLanguage: async (lng) => {
+  cacheUserLanguage: async lng => {
     await AsyncStorage.setItem('user-language', lng);
   },
 };

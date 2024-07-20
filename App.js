@@ -11,10 +11,9 @@ import ProfileScreen from './src/components/ProfileScreen';
 import ColorPage from './src/components/ColorPage';
 import ProfileDetailScreen from './src/components/ProfileDetailScreen';
 import SettingsPage from './src/components/Settings';
-import AboutAuthorPage from './src/components/AboutAuthorPage';
-import HowToUse from './src/components/HowToUse';
-import AboutColorTyping from './src/components/AboutColorTyping';
 import ChangePasswordScreen from './src/components/PasswordChange';
+import ProfileAdmin from './src/components/ProfileAdmin';
+import ProfileEditScreen from './src/components/ProfileEditScreen';
 
 const Stack = createStackNavigator();
 
@@ -29,10 +28,9 @@ function App() {
         <Stack.Screen name="ColorPage" component={ColorPage} />
         <Stack.Screen name="Details" component={ProfileDetailScreen} />
         <Stack.Screen name="Settings" component={SettingsPage} />
-        <Stack.Screen name="AboutAuthor" component={AboutAuthorPage} />
-        <Stack.Screen name="HowToUse" component={HowToUse} />
-        <Stack.Screen name="AboutColor" component={AboutColorTyping} />
         <Stack.Screen name="PasswordChange" component={ChangePasswordScreen} />
+        <Stack.Screen name="ProfileAdmin" component={ProfileAdmin} />
+        <Stack.Screen name="ProfileEdit" component={ProfileEditScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

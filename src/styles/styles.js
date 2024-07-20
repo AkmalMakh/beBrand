@@ -1,10 +1,10 @@
 const styles = {
-   container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'white',
-   },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
   buttonsContainer: {
     flexDirection: 'row',
     position: 'absolute',
@@ -34,7 +34,6 @@ const styles = {
     borderRadius: 3,
   },
 
-
   buttonTextSecondary: {
     color: 'black',
     fontSize: 16,
@@ -57,7 +56,7 @@ const styles = {
     width: 100,
     height: 100,
     borderRadius: 50,
-    marginTop:10,
+    marginTop: 10,
   },
   input: {
     height: 40,
@@ -84,7 +83,7 @@ const styles = {
     alignItems: 'center', // Center items vertically
     padding: 1,
   },
-  
+
   textContainer: {
     flex: 1, // Take up remaining space
   },
@@ -95,14 +94,14 @@ const styles = {
     fontWeight: 'bold',
     marginTop: 10,
     marginBottom: 10,
-    marginLeft:10
+    marginLeft: 10,
   },
   subHeader: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#888',
     marginBottom: 7,
-    marginLeft:10
+    marginLeft: 10,
   },
   scrollViewContent: {
     paddingHorizontal: 15,
@@ -130,7 +129,6 @@ const styles = {
   hexText: {
     fontSize: 12,
     color: 'black',
-
   },
   hexTextBox: {
     marginTop: 10, // Space between the box and the text
@@ -140,58 +138,86 @@ const styles = {
     fontSize: 22,
     fontFamily: 'Verdana',
     fontWeight: 'bold',
-    marginRight: 70, 
+    marginRight: 70,
     marginTop: 30,
     marginBottom: 10,
-},
-header3: {
+  },
+  header3: {
     fontSize: 16,
     fontFamily: 'Verdana',
     fontWeight: 'bold',
-    marginRight: 70, 
+    marginRight: 70,
     marginTop: 10,
     marginBottom: 10,
-},
-header4: {
-    fontWeight: 'light', 
+  },
+  header4: {
+    fontWeight: 'light',
     fontFamily: 'Verdana',
-    fontSize: 14, 
+    fontSize: 14,
     marginBottom: 10,
-},
-settingsIcon: {
-  width: 35, 
-  height: 35,
-  marginRight: 10, 
+  },
+  settingsIcon: {
+    width: 35,
+    height: 35,
+    marginRight: 10,
+  },
+  mainHeader: {
+    marginTop: 10,
+    textAlign: 'center',
+    flex: 1,
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#888',
+    marginBottom: 7,
+    marginLeft: 45,
+  },
+  dropDown: {
+    marginBottom: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderTopWidth: 1, // Border top width
+    borderBottomWidth: 1, // Border bottom width
+    borderColor: 'grey',
+    paddingVertical: 5,
+  },
 
-},
-mainHeader:{
-  marginTop: 10,
-  textAlign: 'center', 
-  flex: 1,
-  fontSize: 18,
-  fontWeight: 'bold',
-  color: '#888',
-  marginBottom: 7,
-  marginLeft:45,
+  description: {
+    fontSize: 16,
+    textAlign: 'center',
+    paddingHorizontal: 20,
+  },
 
-},
-dropDown:{
-  marginBottom: 5, 
-  flexDirection: 'row', 
-  alignItems: 'center', 
-  justifyContent: 'center',
-  borderTopWidth: 1, // Border top width
-  borderBottomWidth: 1, // Border bottom width
-  borderColor: 'grey',
-  paddingVertical: 5,
-},
+  //
+  image: {
+    width: 50,
+    height: 50,
+    borderRadius: 25, // Assuming the user image is circular
+    marginRight: 10,
+  },
+  name: {
+    flex: 1,
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  button: {
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    backgroundColor: '#3498db', // Example color
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  topHalf: {
+    flex: 1,
+  },
+  bottomHalf: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+};
 
-description: {
-  fontSize: 16,
-  textAlign: 'center',
-  paddingHorizontal: 20,
-},
-}
-
-
-export default styles
+export default styles;

@@ -2,8 +2,7 @@ import React, {useState} from 'react';
 import styles from '../styles/styles';
 import {View, Text, Button, TextInput, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import firebase  from '../firebase/firebaseConfig';
-
+import firebase, {firestore} from '../firebase/firebaseConfig';
 
 const SignInPage = () => {
   const navigation = useNavigation(); // Access navigation prop using useNavigation hook
@@ -13,12 +12,6 @@ const SignInPage = () => {
   const [isLoading, setIsLoading] = useState(false); // Add isLoading state
 
   const handleSignIn = async () => {
-    // Implement sign-in logic here
-    //[TODO] temp data
-    fullName = 'Akmal Makhmudov';
-    country = 'Uzbekistan';
-    image = '../../assets/images/iconAvatar.png';
-
     if (!email || !password) {
       alert('Please fill in all fields.');
       return;
@@ -28,8 +21,14 @@ const SignInPage = () => {
 
     try {
       await firebase.auth().signInWithEmailAndPassword(email, password);
-      // After successful registration, navigate to Profile Screen
-      navigation.navigate('Profile');
+      const userId = firebase.auth().currentUser.uid;
+      const userData = await firestore.collection('Users').doc(userId).get();
+      const userRole = userData.data().role;
+      if (userRole == 'admin') {
+        navigation.navigate('ProfileAdmin');
+      } else {
+        navigation.navigate('Profile');
+      }
     } catch (error) {
       console.error(error);
       alert('Login failed. Please check email or password');

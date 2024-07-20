@@ -1,42 +1,45 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import {View, Text, TextInput, TouchableOpacity, Alert} from 'react-native';
 import styles from '../styles/styles';
-import firebase  from '../firebase/firebaseConfig';
-import "firebase/auth"
-import { useTranslation } from 'react-i18next';
+import firebase from '../firebase/firebaseConfig';
+import 'firebase/auth';
+import {useTranslation} from 'react-i18next';
 
 const ChangePasswordScreen = () => {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const navigation = useNavigation();
 
-  const reauthenticate = (currentPassword) => {
+  const reauthenticate = currentPassword => {
     const user = firebase.auth().currentUser;
-    const credential = firebase.auth.EmailAuthProvider.credential(user.email, currentPassword);
+    const credential = firebase.auth.EmailAuthProvider.credential(
+      user.email,
+      currentPassword,
+    );
     return user.reauthenticateWithCredential(credential);
   };
-  
+
   const onChangePasswordPress = () => {
-    textAlert = t('changes')
+    textAlert = t('changes');
     reauthenticate(currentPassword)
       .then(() => {
         const user = firebase.auth().currentUser;
-        
-        user.updatePassword(newPassword)
+
+        user
+          .updatePassword(newPassword)
           .then(() => {
             Alert.alert(textAlert);
             navigation.navigate('Profile');
           })
-          .catch((error) => {
+          .catch(error => {
             Alert.alert(error.message);
           });
       })
-      .catch((error) => {
+      .catch(error => {
         Alert.alert(error.message);
       });
-
   };
 
   return (
@@ -56,7 +59,9 @@ const ChangePasswordScreen = () => {
         onChangeText={setNewPassword}
         secureTextEntry
       />
-      <TouchableOpacity style={styles.buttonPrimary} onPress={onChangePasswordPress}>
+      <TouchableOpacity
+        style={styles.buttonPrimary}
+        onPress={onChangePasswordPress}>
         <Text style={styles.buttonTextPrimary}>{t('submit')}</Text>
       </TouchableOpacity>
     </View>
