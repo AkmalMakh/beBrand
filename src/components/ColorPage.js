@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, StyleSheet, TextInput, Text, Button, ActivityIndicator } from 'react-native';
 import {firestore} from '../firebase/firebaseConfig';
 import {useNavigation} from '@react-navigation/native';
+import DropDownBack from '../components/shared/BackArrow';
+import Colors from './shared/Colors';
 
 const ColorPage = ({ route }) => {
   const navigation = useNavigation();
@@ -11,6 +13,9 @@ const ColorPage = ({ route }) => {
   const [hexValue, setHexValue] = useState(color);
   const [colorsDb, setColorsDb] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [inputId, setInputId] = useState('');
+  const [colorName, setColorName] = useState('');
+  
   const colorMap = {
     'TEMPERATURE': 'temperatureColors',
     'COLOR SATURATION': 'saturationColors',
@@ -26,16 +31,31 @@ const ColorPage = ({ route }) => {
   
   if (userData == undefined) {
     return (
-      <View style={[styles.container, { backgroundColor: hexValue }]} />
+      <View style={[styles.container, { backgroundColor: hexValue }]} >
+           <DropDownBack />
+        </View>
     );
   }
 
+// Function to handle retrieving color name by ID
+const getColorById = () => {
+  setLoading(true);
+  const color = Colors.find(item => item.id === parseInt(inputId));
+  if (color) {
+    setColorName(color.name);
+    setHexValue(color.hex);
+  } else {
+    setColorName('Color not found');
+  }
+  setLoading(false);
+};
+
 const saveHex = async () => {
-    updateColor(newColor.colorType, newColor.newHex, newColor.oldHex)
+    updateColor(newColor.colorType, newColor.newHex)
     const user = userData
     navigation.navigate('ProfileEdit', {user})
 };
-const updateColor = async (colorType, newHex, oldHex) => {
+const updateColor = async (colorType, newHex) => {
   try {
     const userId = userData.uid;
     const docRef = firestore.collection('ColorData').doc(userId);
@@ -63,19 +83,27 @@ const updateColor = async (colorType, newHex, oldHex) => {
 
   return (
     <View style={styles.container}>
+      <DropDownBack />
       {/* Top half with the background color */}
       <View style={[styles.topHalf, { backgroundColor: hexValue }]} />
       
       {/* Bottom half with TextInput */}
       <View style={styles.bottomHalf}>
         <Text style={styles.hexText}>HEX {hexValue.toUpperCase()}</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter Hex Color"
-          value={hexValue}
-          onChangeText={text => setHexValue(text)}
-          autoCapitalize="none"
-        />
+
+      <TextInput
+        style={styles.input}
+        placeholder="ID"
+        keyboardType="numeric"
+        value={inputId}
+        onChangeText={text => setInputId(text)}
+      />
+      <Button title="Get Color" onPress={getColorById} />
+      {loading ? (
+        <Text>Loading...</Text>
+      ) : (
+        <Text style={styles.colorName}>{colorName}</Text>
+      )}
         <View style={styles.buttonContainer}>
           <Button
             title="SAVE"

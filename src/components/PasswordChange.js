@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {View, Text, TextInput, TouchableOpacity, Alert} from 'react-native';
-import styles from '../styles/styles';
+import {View, Text, TextInput, TouchableOpacity, Alert, Image} from 'react-native';
+import styles from '../styles/signIn';
 import firebase from '../firebase/firebaseConfig';
 import 'firebase/auth';
 import {useTranslation} from 'react-i18next';
@@ -44,24 +44,50 @@ const ChangePasswordScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{t('change password')}</Text>
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={styles.backButton}
+      >
+        <Image
+          source={require('../../assets/images/arrow2.png')}
+          style={styles.backButtonImage}
+        />
+      </TouchableOpacity>
+      
+      <View style={styles.textContainer}>
+          <Text style={styles.text}>{t('current password')}</Text>
+      </View>
       <TextInput
         style={styles.input}
-        placeholder={t('current password')}
+        placeholder={t('**********')}
+        placeholderTextColor="#bdb7b7"
         value={currentPassword}
         onChangeText={setCurrentPassword}
         secureTextEntry
       />
+      <View style={styles.textContainer}>
+          <Text style={styles.text}>{t('new password')}</Text>
+      </View>
       <TextInput
         style={styles.input}
-        placeholder={t('new password')}
+        placeholder={t('**********')}
+        placeholderTextColor="#bdb7b7"
         value={newPassword}
         onChangeText={setNewPassword}
         secureTextEntry
       />
-      <TouchableOpacity
-        style={styles.buttonPrimary}
-        onPress={onChangePasswordPress}>
+      <View style={styles.textContainer}>
+          <Text style={styles.text}>{t('confirm password')}</Text>
+      </View>
+       <TextInput
+        style={styles.input}
+        placeholder={t('**********')}
+        placeholderTextColor="#bdb7b7"
+        value={newPassword}
+        onChangeText={setNewPassword}
+        secureTextEntry
+      />
+      <TouchableOpacity style={styles.buttonPrimary} onPress={onChangePasswordPress}>
         <Text style={styles.buttonTextPrimary}>{t('submit')}</Text>
       </TouchableOpacity>
     </View>

@@ -20,7 +20,12 @@ const Stack = createStackNavigator();
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Welcome">
+        <Stack.Navigator
+        initialRouteName="Welcome"
+        screenOptions={{
+          headerShown: false, // Hide the header for all screens
+        }}
+      >
         <Stack.Screen name="Welcome" component={WelcomePage} />
         <Stack.Screen name="SignIn" component={SignInPage} />
         <Stack.Screen name="SignUp" component={SignUpPage} />

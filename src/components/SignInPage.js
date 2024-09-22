@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
-import styles from '../styles/styles';
+import styles from '../styles/signIn';
 import {View, Text, Button, TextInput, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import firebase, {firestore} from '../firebase/firebaseConfig';
+import DropDownBack from './shared/BackArrow';
 
 const SignInPage = () => {
   const navigation = useNavigation(); // Access navigation prop using useNavigation hook
@@ -10,7 +11,9 @@ const SignInPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false); // Add isLoading state
-
+  const forgotPassword = async () => {
+    return;
+  }
   const handleSignIn = async () => {
     if (!email || !password) {
       alert('Please fill in all fields.');
@@ -39,23 +42,33 @@ const SignInPage = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Sign In</Text>
+      <DropDownBack />
+      <Text style={styles.title}>LOG IN</Text>
+      <View style={styles.textContainer}>
+      <Text style={styles.text}>E-mail</Text>
+      </View>
       <TextInput
         style={styles.input}
-        placeholder="Username"
+        placeholder="jane@example.com"
+        placeholderTextColor="#bdb7b7"
         onChangeText={text => setEmail(text)}
         value={email}
       />
+      <View style={styles.textContainer}>
+      <Text style={styles.text}>Password</Text>
+      </View>
       <TextInput
         style={styles.input}
         placeholder="Password"
+        placeholderTextColor="#bdb7b7"
         secureTextEntry={true}
         onChangeText={text => setPassword(text)}
         value={password}
       />
       <Button
         title="Forgot Password ?"
-        onPress={handleSignIn}
+        onPress={forgotPassword}
+        style={styles.title}
         color="blue" // Set button color to black
       />
       <TouchableOpacity style={styles.buttonPrimary} onPress={handleSignIn}>

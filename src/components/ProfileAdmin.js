@@ -8,8 +8,9 @@ import {
   Dimensions,
 } from 'react-native';
 import firebase, { firestore } from '../firebase/firebaseConfig';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import styles from '../styles/adminStyle';
+import DropDown from './shared/DropDown';
 
 const ProfileAdmin = () => {
   const navigation = useNavigation();
@@ -35,36 +36,40 @@ const ProfileAdmin = () => {
   const toggleClientsVisibility = () => {
     setShowAllClients(!showAllClients);
   };
+
   const viewDetails = (user) => {
-    console.log(user)
-    navigation.navigate('ProfileEdit', {user})
+    console.log(user);
+    navigation.navigate('ProfileEdit', { user });
   };
 
   return (
     <View style={styles.container}>
+      <DropDown title={'color passport'} />
       <ScrollView
         contentContainerStyle={[styles.scrollViewContent, { width: screenWidth }]}
-        showsVerticalScrollIndicator={true}>
+        showsVerticalScrollIndicator={true}
+      >
         <Text style={styles.title}>List of new Clients</Text>
         {/* Display user data */}
-        <View>
+        <View style={styles.rowContainer}>
           {users.slice(0, showAllClients ? users.length : 4).map((user, index) => (
-            <View key={index} style={styles.container}>
+            <View key={index} style={styles.profileRow}>
               <View style={styles.containerAv}>
-                {user.imageUrl != null ? (
-                  <Image source={{ uri: user.imageUrl }} style={styles.avatar} />
+                {user.profileImage ? (
+                  <Image source={{ uri: user.profileImage }} style={styles.avatar} />
                 ) : (
                   <Image
-                    source={require('../../assets/images/akmal.png')}
+                    source={require('../../assets/images/photo.png')}
                     style={styles.avatar}
                   />
                 )}
                 <View style={styles.textContainer}>
-                  <Text style={styles.header}>{user.fullName}</Text>
+                  <Text style={styles.header}>{user.fullName || 'No Name Provided'}</Text>
                 </View>
                 <TouchableOpacity
                   style={styles.button}
-                  onPress={() => viewDetails(user)}>
+                  onPress={() => viewDetails(user)}
+                >
                   <Text style={styles.buttonText}>View Details</Text>
                 </TouchableOpacity>
               </View>

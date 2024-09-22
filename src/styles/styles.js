@@ -3,7 +3,8 @@ const styles = {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#704BB3',
+    marginTop: 55
   },
   buttonsContainer: {
     flexDirection: 'row',
@@ -61,12 +62,12 @@ const styles = {
   input: {
     height: 40,
     width: 300,
-    borderColor: '#000000', // Set border color to black
+    borderColor: '#bdb7b7', // Set border color to white
     borderWidth: 1,
     borderRadius: 5, // Add border radius
     marginBottom: 10,
     paddingHorizontal: 10,
-    color: '#000000', // Set text color to black
+    color: '#FFFFFF', // Set text color to white
   },
   inlineInputContainer: {
     flexDirection: 'row',
@@ -111,36 +112,80 @@ const styles = {
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'center',
+
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 10,
+    
+  },
+  boxContainer: {
+    backgroundColor: 'white', // White background for the box container
+    padding: 10, // Padding inside the box container
+    borderRadius: 10, // Rounded corners for the box container
+    marginHorizontal: 5, // Space between boxes
+    alignItems: 'center', // Center the content inside the box
+    shadowColor: '#000', // Shadow color for depth
+    shadowOffset: { width: 0, height: 2 }, // Shadow position
+    shadowOpacity: 0.3, // Shadow opacity
+    shadowRadius: 4, // Shadow blur
+    elevation: 5, // Elevation for Android shadow
   },
   box: {
-    width: 100,
-    height: 100,
-    backgroundColor: 'gray',
-    marginHorizontal: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 20,
-  },
-  hexText: {
-    fontSize: 12,
-    color: 'black',
+    width: 90,
+    height: 80,
+    borderRadius: 8, // Rounded corners for the inner color box
   },
   hexTextBox: {
     marginTop: 10, // Space between the box and the text
-    fontSize: 16, // Adjust font size as needed
+    fontSize: 16, // Larger font size for hex text
+    color: '#1c1c1c', // Darker color for contrast against the white box
+    fontWeight: 'bold', // Bold text
+  },
+  hexText: {
+    fontSize: 12,
+    color: '#888', 
+    marginTop: 5, 
+    fontWeight: 'bold', 
+  },
+  hexTextBox: {
+    marginTop: 10, 
+    fontSize: 16, 
+    color: '#1c1c1c', 
+    fontWeight: 'bold', 
+  },
+  box2Container: {
+    backgroundColor: 'white', // White background for the smaller box container
+    padding: 5, // Reduced padding for smaller boxes
+    borderRadius: 8, // Rounded corners for the smaller box container
+    marginHorizontal: 5, // Reduced space between smaller boxes
+    alignItems: 'center', // Center the content inside the smaller box
+    shadowColor: '#000', // Shadow color for depth
+    shadowOffset: { width: 0, height: 1 }, // Smaller shadow position
+    shadowOpacity: 0.2, // Lighter shadow opacity
+    shadowRadius: 2, // Smaller shadow blur
+    elevation: 3, // Lower elevation for Android shadow
+  },
+  box2: {
+    width: 50,
+    height: 50,
+    borderRadius: 5, // Slightly rounded corners for the smaller inner color box
+  },
+  hexTextBox2: {
+    marginTop: 5, // Reduced space between the box and the text for smaller boxes
+    fontSize: 12, // Smaller font size for hex text in smaller boxes
+    color: '#1c1c1c', // Darker color for contrast against the white box
+    fontWeight: 'bold', // Bold text
   },
   header2: {
     fontSize: 22,
     fontFamily: 'Verdana',
     fontWeight: 'bold',
     marginRight: 70,
-    marginTop: 30,
+    marginTop: 60,
     marginBottom: 10,
+    color: 'white', 
   },
   header3: {
     fontSize: 16,
@@ -149,12 +194,14 @@ const styles = {
     marginRight: 70,
     marginTop: 10,
     marginBottom: 10,
+    color: 'white', 
   },
   header4: {
     fontWeight: 'light',
     fontFamily: 'Verdana',
     fontSize: 14,
     marginBottom: 10,
+    color: 'white', 
   },
   settingsIcon: {
     width: 35,
@@ -218,6 +265,8 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
   },
+
+  
 };
 
 export default styles;

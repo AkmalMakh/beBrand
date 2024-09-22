@@ -11,6 +11,7 @@ import styles from '../styles/styles';
 import { ColorSection, ColorDepthSection } from './shared/ColorSection';
 import { firestore } from '../firebase/firebaseConfig';
 import { useTranslation } from 'react-i18next';
+import DropDown from './shared/DropDown';
 
 const ProfileEditScreen = () => {
   const { t } = useTranslation();
@@ -89,6 +90,7 @@ const ProfileEditScreen = () => {
 
   return (
     <View style={styles.container}>
+      <DropDown title={t('color passport')} />
       <ScrollView
         contentContainerStyle={[styles.scrollViewContent, { width: screenWidth }]}
         showsVerticalScrollIndicator={true}

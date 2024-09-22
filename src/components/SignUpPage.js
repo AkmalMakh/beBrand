@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState } from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {
   View,
@@ -6,14 +6,14 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
-  ActivityIndicator,
   Platform,
 } from 'react-native';
-import styles from '../styles/styles';
+import styles from '../styles/signUp';
 import firebase, {firestore} from '../firebase/firebaseConfig';
 import colors from './shared/Colors';
 import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
 import {uriToBlob} from './shared/CompressImageUtil';
+import DropDownBack from './shared/BackArrow';
 
 const SignUpPage = () => {
   const navigation = useNavigation(); // Access navigation prop using useNavigation hook
@@ -26,6 +26,7 @@ const SignUpPage = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [profileImage, setProfileImage] = useState(null);
+  const [dowload, setDowload] = useState(null);
   const [role, setRole] = useState('user');
   const [isLoading, setIsLoading] = useState(false); // Add isLoading state
   const [colorData, setColorData] = useState({
@@ -84,6 +85,7 @@ const SignUpPage = () => {
       const userId = userCredential.user.uid;
       setRole('user');
       saveImageToStorage(userId);
+      console.log("After save",profileImage)
       // Create user object to store in Firestore
       const userData = {
         uid:userId,
@@ -120,25 +122,51 @@ const SignUpPage = () => {
       Platform.OS === 'ios'
         ? profileImage.replace('file://', '')
         : profileImage;
+  
+    if (!uploadUri) {
+      console.error('Upload URI is null or undefined');
+      return;
+    }
+  
     const fileName = `profileImages/${userId}.jpg`;
     const reference = firebase.storage().ref(fileName);
-    console.log('Before Download url');
+  
+    console.log('Before uploading, uploadUri:', uploadUri);
+  
     try {
       const blob = await uriToBlob(uploadUri);
-      await reference.put(blob);
-      const downloadURL = await reference.getDownloadURL();
-      console.log('Download url', downloadURL);
-      setProfileImage(downloadURL);
+      if (!blob) {
+        console.error('Blob is null');
+        return;
+      }
+      console.log('Blob created:', blob);
+  
+      await reference.put(blob); // Upload blob to Firebase Storage
+      console.log('Image uploaded successfully');
+  
+      // Adding a 1-second delay before getting the download URL
+      setTimeout(async () => {
+        const downloadURL = await reference.getDownloadURL(); // Get the download URL
+        if (!downloadURL) {
+          console.error('Download URL is null');
+          return;
+        }
+        console.log('Download URL:', downloadURL);
+        setProfileImage(downloadURL); // Set the profile image
+        return downloadURL; // Return the download URL
+      }, 1000); // 1-second delay
+  
     } catch (error) {
-      console.error('Image upload error: ', error);
+      console.error('Image upload error:', error);
+      throw error;
     }
-  };
-  const openImagePicker = () => {
+  };  
+  const openImagePicker = async () => {
     const options = {
       mediaType: 'photo',
-      maxWidth: 100,
-      maxHeight: 100,
-      quality: 0.8,
+      maxWidth: 150,
+      maxHeight: 150,
+      quality: 1,
     };
     launchImageLibrary(options, async response => {
       if (response.didCancel) {
@@ -154,6 +182,7 @@ const SignUpPage = () => {
   };
   return (
     <View style={styles.container}>
+      <DropDownBack />
       <Text style={styles.title}>Create your account</Text>
       <TouchableOpacity
         style={styles.avatarContainer}
@@ -162,7 +191,7 @@ const SignUpPage = () => {
           source={
             profileImage
               ? {uri: profileImage}
-              : require('../../assets/images/iconAvatar.png')
+              : require('../../assets/images/photo.png')
           }
           style={styles.avatar}
         />
@@ -170,6 +199,7 @@ const SignUpPage = () => {
       <TextInput
         style={styles.input}
         placeholder="Full Name"
+        placeholderTextColor="#bdb7b7"
         onChangeText={text => setFullname(text)}
         value={fullName}
       />
@@ -181,46 +211,60 @@ const SignUpPage = () => {
             styles.inlineInput,
           ]}
           placeholder="Age"
+          placeholderTextColor="#bdb7b7"
           onChangeText={text => setAge(text)}
           value={age}
         />
         <TextInput
           style={[{marginRight: 5}, styles.input, styles.inlineInput]}
           placeholder="Sex"
+          placeholderTextColor="#bdb7b7"
           onChangeText={text => setSex(text)}
           value={sex}
         />
         <TextInput
           style={[{marginRight: 35}, styles.input, styles.inlineInput]}
           placeholder="Country"
+          placeholderTextColor="#bdb7b7"
           onChangeText={text => setCountry(text)}
           value={country}
         />
       </View>
+      <View style={styles.textContainer}>
+        <Text style={styles.text}>E-mail</Text>
+      </View>
       <TextInput
         style={styles.input}
-        placeholder="Email"
+        placeholder="jane@example.com"
+        placeholderTextColor="#bdb7b7"
         onChangeText={text => setEmail(text)}
         value={email}
         keyboardType="email-address"
         autoCapitalize="none"
         textContentType="emailAddress"
       />
+      <View style={styles.textContainer}>
+        <Text style={styles.text}>Password</Text>
+      </View>
       <TextInput
         style={styles.input}
         placeholder="Password"
+        placeholderTextColor="#bdb7b7"
         secureTextEntry={true}
         onChangeText={text => setPassword(text)}
         value={password}
       />
+      <View style={styles.textContainer}>
+        <Text style={styles.text}>Confirm your Password</Text>
+      </View>
       <TextInput
         style={styles.input}
         placeholder="Confirm Password"
+        placeholderTextColor="#bdb7b7"
         secureTextEntry={true}
         onChangeText={text => setConfirmPassword(text)}
         value={confirmPassword}
       />
-
       <TouchableOpacity style={styles.buttonPrimary} onPress={handleSignup}>
         <Text style={styles.buttonTextPrimary}>Submit</Text>
       </TouchableOpacity>

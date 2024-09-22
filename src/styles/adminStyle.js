@@ -3,7 +3,8 @@ const styles = {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#704BB3', 
+    marginTop: 55,
   },
   header: {
     fontSize: 14,
@@ -20,23 +21,21 @@ const styles = {
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 10,
   },
 
   description: {
     fontSize: 16,
     textAlign: 'center',
-    paddingHorizontal: 20,
   },
   image: {
     width: 50,
     height: 50,
-    borderRadius: 25, // Assuming the user image is circular
+    borderRadius: 25, 
     marginRight: 10,
   },
   containerAv: {
-    flexDirection: 'row', // Arrange items horizontally
-    alignItems: 'center', // Center items vertically
+    flexDirection: 'row', 
+    alignItems: 'center', 
     padding: 1,
   },
   avatar: {

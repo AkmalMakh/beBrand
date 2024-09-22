@@ -1,19 +1,19 @@
 import React from 'react';
-import styles from '../styles/styles';
-import {View, TouchableOpacity, Text} from 'react-native';
-import CustomButton from './shared/CostomButton';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
+import styles from '../styles/setting';
 import firebase from '../firebase/firebaseConfig';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
+import DropDown from './shared/DropDown';
 
-const SettingsPage = ({navigation}) => {
-  const {t, i18n} = useTranslation();
+const SettingsPage = ({ navigation }) => {
+  const { t, i18n } = useTranslation();
 
   const toggleLanguage = async () => {
     const newLanguage = i18n.language === 'en' ? 'ru' : 'en';
     await i18n.changeLanguage(newLanguage);
   };
 
-  const handleLogoout = async () => {
+  const handleLogout = async () => {
     try {
       await firebase.auth().signOut();
       navigation.navigate('Welcome');
@@ -21,31 +21,51 @@ const SettingsPage = ({navigation}) => {
       console.log(error);
     }
   };
+
   return (
     <View style={styles.container}>
-      <CustomButton
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={styles.backButton}
+      >
+        <Image
+          source={require('../../assets/images/arrow2.png')}
+          style={styles.backButtonImage}
+        />
+      </TouchableOpacity>
+
+      <TouchableOpacity
         onPress={() => navigation.navigate('PasswordChange')}
-        buttonStyle={{width: 250, paddingVertical: 10, marginBottom: 15}}
-        textStyle={{textAlign: 'center'}}
-        text={t('change password')}
-      />
-      <CustomButton
+        style={styles.button}
+      >
+        <Image
+            source={require('../../assets/images/lockers.png')}
+            style={styles.settingsIcon}
+          />
+        <Text style={styles.buttonText}>{t('change password')}</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
         onPress={toggleLanguage}
-        buttonStyle={{width: 250, paddingVertical: 10, marginBottom: 15}}
-        textStyle={{textAlign: 'center'}}
-        title={
-          i18n.language === 'en'
-            ? t('switch_to_russian')
-            : t('switch_to_english')
-        }
-        text={t('change_language')}
-      />
-      <CustomButton
-        onPress={handleLogoout}
-        buttonStyle={{width: 250, paddingVertical: 10, marginBottom: 15}}
-        textStyle={{textAlign: 'center'}}
-        text={t('log out')}
-      />
+        style={styles.button}
+      >
+          <Image
+            source={require('../../assets/images/language.png')}
+            style={styles.settingsIcon}
+          />
+        <Text style={styles.buttonText}>{t('change language')}</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={handleLogout}
+        style={styles.button}
+      >
+          <Image
+            source={require('../../assets/images/locate.png')}
+            style={styles.settingsIcon}
+          />
+        <Text style={styles.buttonText}>{t('log out')}</Text>
+      </TouchableOpacity>
     </View>
   );
 };
