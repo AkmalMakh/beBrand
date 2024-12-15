@@ -131,28 +131,32 @@ const styles = {
     shadowOpacity: 0.3, // Shadow opacity
     shadowRadius: 4, // Shadow blur
     elevation: 5, // Elevation for Android shadow
+    width: 110, // Set a fixed width for the box
+    height: 130, // Set a fixed height for the box
+    justifyContent: 'space-between', // Space out elements vertically
   },
+  
   box: {
-    width: 90,
-    height: 80,
+    width: 90, // Fixed width for the inner color box
+    height: 80, // Fixed height for the inner color box
     borderRadius: 8, // Rounded corners for the inner color box
   },
+  
   hexTextBox: {
-    marginTop: 10, // Space between the box and the text
-    fontSize: 16, // Larger font size for hex text
-    color: '#1c1c1c', // Darker color for contrast against the white box
-    fontWeight: 'bold', // Bold text
+    marginTop: 10, 
+    fontSize: 12, 
+    color: '#1c1c1c', 
+    fontWeight: 'bold',
+    textAlign: 'center', // Center-align the text
+    flexWrap: 'wrap', // Allow text to wrap to the next line
+    maxWidth: 90, // Ensure the text stays within the box's width
+    lineHeight: 12, // Adjust line height for better readability
   },
+  
   hexText: {
     fontSize: 12,
     color: '#888', 
     marginTop: 5, 
-    fontWeight: 'bold', 
-  },
-  hexTextBox: {
-    marginTop: 10, 
-    fontSize: 16, 
-    color: '#1c1c1c', 
     fontWeight: 'bold', 
   },
   box2Container: {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
+  RefreshControl,
 } from 'react-native';
 import firebase, { firestore } from '../firebase/firebaseConfig';
 import { useNavigation } from '@react-navigation/native';
@@ -16,22 +17,31 @@ const ProfileAdmin = () => {
   const navigation = useNavigation();
   const [users, setUsers] = useState([]);
   const [showAllClients, setShowAllClients] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const screenWidth = Dimensions.get('window').width;
 
-  useEffect(() => {
-    // Fetch users from Firestore
-    const fetchUsers = async () => {
-      try {
-        const usersSnapshot = await firestore.collection('Users').get();
-        const usersData = usersSnapshot.docs.map(doc => doc.data());
-        setUsers(usersData.filter(user => user.role === 'user'));
-      } catch (error) {
-        console.error('Error fetching users: ', error);
-      }
-    };
+  // Fetch users from Firestore
+  const fetchUsers = useCallback(async () => {
+    try {
+      const usersSnapshot = await firestore.collection('Users').get();
+      const usersData = usersSnapshot.docs.map((doc) => doc.data());
+      setUsers(usersData.filter((user) => user.role === 'user'));
+    } catch (error) {
+      console.error('Error fetching users: ', error);
+    } finally {
+      setRefreshing(false);
+    }
+  }, []);
 
-    fetchUsers(); // Call fetchUsers function when component mounts
-  }, []); // Empty dependency array to run effect only once
+  useEffect(() => {
+    fetchUsers(); // Fetch users when the component mounts
+  }, [fetchUsers]);
+
+  // Handle refresh
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchUsers();
+  };
 
   const toggleClientsVisibility = () => {
     setShowAllClients(!showAllClients);
@@ -48,6 +58,9 @@ const ProfileAdmin = () => {
       <ScrollView
         contentContainerStyle={[styles.scrollViewContent, { width: screenWidth }]}
         showsVerticalScrollIndicator={true}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
         <Text style={styles.title}>List of new Clients</Text>
         {/* Display user data */}

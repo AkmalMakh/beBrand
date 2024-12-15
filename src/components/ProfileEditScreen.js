@@ -28,7 +28,7 @@ const ProfileEditScreen = () => {
 
   const holdTimeoutRef = useRef(null); // To store the timeout reference
 
-  console.log(userData);
+  console.log('Aki',userData);
 
   const fetchColors = async () => {
     try {
@@ -99,7 +99,7 @@ const ProfileEditScreen = () => {
       >
         <ColorSection
           header={t('leading characteristics')}
-          subHeader={t('muted')}
+          subHeader={t('Depth')}
           description={t('leading info')}
           colors={colorsDb.mutedColors}
           navigation={navigation}

@@ -25,7 +25,7 @@ container: {
   inlineInputContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '100%',
+    width: '96%',
     marginBottom: 10,
   },
   inlineInput: {

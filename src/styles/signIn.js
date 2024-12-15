@@ -9,7 +9,6 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#704BB3',
     paddingHorizontal: SCREEN_WIDTH < 350 ? 10 : 20, // Adjust padding for smaller screens
   },

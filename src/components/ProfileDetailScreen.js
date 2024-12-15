@@ -76,7 +76,7 @@ const ProfileDetailScreen = () => {
       >
         <ColorSection
           header={t('leading characteristics')}
-          subHeader={t('muted')}
+          subHeader={t('Depth')}
           description={t('leading info')}
           colors={colorsDb.mutedColors}
           navigation={navigation}
