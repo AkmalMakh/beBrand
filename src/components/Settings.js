@@ -3,7 +3,6 @@ import { View, Text, TouchableOpacity, Image } from 'react-native';
 import styles from '../styles/setting';
 import firebase from '../firebase/firebaseConfig';
 import { useTranslation } from 'react-i18next';
-import DropDown from './shared/DropDown';
 
 const SettingsPage = ({ navigation }) => {
   const { t, i18n } = useTranslation();

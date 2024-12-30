@@ -1,7 +1,6 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import {
   View,
-  Text,
   ScrollView,
   Dimensions,
   ActivityIndicator,
@@ -63,7 +62,7 @@ const ProfileDetailScreen = () => {
 
   return (
     <View style={styles.container}>      
-      <DropDown title={t('color passport')} />
+      <DropDown title="Color Passport" isHiddenArrow={false} />
       <ScrollView
         contentContainerStyle={[styles.scrollViewContent, {width: screenWidth}]}
         showsVerticalScrollIndicator={true}

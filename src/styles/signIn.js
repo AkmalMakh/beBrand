@@ -10,21 +10,21 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: '#704BB3',
-    paddingHorizontal: SCREEN_WIDTH < 350 ? 10 : 20, // Adjust padding for smaller screens
+    paddingHorizontal: SCREEN_WIDTH < 350 ? 10 : 20,
   },
   title: {
-    fontSize: scale(30), // Scale font size based on screen width
+    fontSize: scale(30),
     color: 'white',
     textAlign: 'center',
     marginBottom: scale(20),
   },
   textContainer: {
-    width: '80%', // Keep the width percentage-based for flexibility
+    width: '80%', 
     alignItems: 'flex-start',
     paddingHorizontal: 10,
   },
   text: {
-    fontSize: scale(20), // Scale font size based on screen width
+    fontSize: scale(20),
     color: 'white',
     textAlign: 'left',
     marginBottom: scale(10),
@@ -64,5 +64,11 @@ export default StyleSheet.create({
     resizeMode: 'contain',
     marginTop: scale(50),
     marginLeft: scale(10),
+  },
+  errorText: {
+    color: 'red',   
+    fontSize: 14,     
+    marginVertical: 10, 
+    textAlign: 'center', 
   },
 });

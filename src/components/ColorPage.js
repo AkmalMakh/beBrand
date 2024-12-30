@@ -14,7 +14,6 @@ import { firestore } from '../firebase/firebaseConfig';
 import { useNavigation } from '@react-navigation/native';
 import DropDownBack from '../components/shared/BackArrow';
 import Colors from './shared/Colors';
-import ColorsEng from './shared/ColorEngRu';
 
 const ColorPage = ({ route }) => {
   const navigation = useNavigation();
@@ -26,7 +25,7 @@ const ColorPage = ({ route }) => {
   const [inputId, setInputId] = useState('');
   const [colorName, setColorName] = useState('');
   const [hexValue, setHexValue] = useState(color.hex);
-  const [colorData, setColorData] = useState({ hex: '', name: '' });
+  const [colorData, setColorData] = useState({ hex: '', englishName: '' });
 
   // Mapping headers to Firestore collections
   const colorMap = {
@@ -52,15 +51,6 @@ const ColorPage = ({ route }) => {
     );
   }
 
-  const loopThroughColors = (name) => {
-    if (name !== undefined) {
-      const found = Object.entries(ColorsEng).find(([key, value]) => value.toLowerCase() === name.toLowerCase());
-      if (found) {
-        return found[0];
-      }
-    }
-  };
-
   // Function to retrieve color details by ID
   const getColorById = () => {
     setLoading(true);
@@ -68,11 +58,11 @@ const ColorPage = ({ route }) => {
       (item) => item.id === parseInt(inputId, 10)
     );
     if (selectedColor) {
-      const name = loopThroughColors(selectedColor.name);
-      selectedColor.name = name;
+      console.log("AKI", selectedColor)
+      
       setColorData(selectedColor);
       setHexValue(selectedColor.hex);
-      setColorName(name);
+      setColorName(selectedColor.name);
       newColor.newHex = selectedColor;
     }
     setLoading(false);

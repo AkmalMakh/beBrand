@@ -14,16 +14,17 @@ import SettingsPage from './src/components/Settings';
 import ChangePasswordScreen from './src/components/PasswordChange';
 import ProfileAdmin from './src/components/ProfileAdmin';
 import ProfileEditScreen from './src/components/ProfileEditScreen';
+import VerifyEmail from './src/components/VerifyEmail';
 
 const Stack = createStackNavigator();
 
 function App() {
   return (
     <NavigationContainer>
-        <Stack.Navigator
+      <Stack.Navigator
         initialRouteName="Welcome"
         screenOptions={{
-          headerShown: false, // Hide the header for all screens
+          headerShown: false,
         }}
       >
         <Stack.Screen name="Welcome" component={WelcomePage} />
@@ -36,6 +37,7 @@ function App() {
         <Stack.Screen name="PasswordChange" component={ChangePasswordScreen} />
         <Stack.Screen name="ProfileAdmin" component={ProfileAdmin} />
         <Stack.Screen name="ProfileEdit" component={ProfileEditScreen} />
+        <Stack.Screen name="VerifyEmail" component={VerifyEmail} />
       </Stack.Navigator>
     </NavigationContainer>
   );

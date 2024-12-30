@@ -81,7 +81,7 @@ const ProfileScreen = () => {
 
   return (
     <View style={styles.container}>
-      <DropDown title={t('color passport')} />
+      <DropDown title={t('color passport')} isHiddenArrow={true} />
       <ScrollView
         contentContainerStyle={[styles.scrollViewContent, {width: 375}]}
         showsVerticalScrollIndicator={true}
@@ -98,8 +98,12 @@ const ProfileScreen = () => {
             />
           )}
           <View style={styles.textContainer}>
-            <Text style={styles.header}>{fullName}</Text>
-            <Text style={styles.subHeader}>{country}</Text>
+            <Text style={styles.subHeader}>
+              {t('Full Name')}: {fullName}
+            </Text>
+            <Text style={styles.subHeader}>
+             {t('country')}: {country}
+            </Text>
             <Text style={styles.subHeader}>
               {t('passport number')}: {colorPassportNumber}
             </Text>

@@ -55,7 +55,23 @@ container: {
     fontSize: 24,
     color: 'white',
   },
-
+  buttonSecondary: {
+    backgroundColor: '#EF86C5',
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 10, 
+    marginLeft: 5,
+    marginRight: 37,
+    height: 40,
+    justifyContent: 'center', 
+    alignItems: 'center', 
+  },
+  buttonTextSecondary: {
+    color: '#fff', 
+    fontSize: 12,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
   input: {
     height: 40,
     width: 300,

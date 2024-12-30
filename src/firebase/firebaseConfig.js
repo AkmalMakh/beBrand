@@ -13,8 +13,18 @@ const firebaseConfig = {
   measurementId: 'G-4FSL31R0SR',
 };
 
+const firebaseConfigProduction = {
+  apiKey: "AIzaSyDk6BOJrpSMH-nzQALW1yN87xPf3GdP51M",
+  authDomain: "bebrand-83e0a.firebaseapp.com",
+  projectId: "bebrand-83e0a",
+  storageBucket: "bebrand-83e0a.firebasestorage.app",
+  messagingSenderId: "428697527024",
+  appId: "1:428697527024:web:1f987f3a9b518956809835",
+  measurementId: "G-PXFD7GVP78"
+};
+
 if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
+  firebase.initializeApp(firebaseConfigProduction);
 }
 
 const firestore = firebase.firestore();

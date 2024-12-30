@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -10,11 +10,11 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import styles from '../styles/signUp';
-import firebase, { firestore } from '../firebase/firebaseConfig';
-import { launchImageLibrary } from 'react-native-image-picker';
-import { uriToBlob } from './shared/CompressImageUtil';
+import firebase, {firestore} from '../firebase/firebaseConfig';
+import {launchImageLibrary} from 'react-native-image-picker';
+import {uriToBlob} from './shared/CompressImageUtil';
 import DropDownBack from './shared/BackArrow';
 import colorData from './shared/ColorData';
 import getNextUserId from './shared/Counter';
@@ -37,70 +37,144 @@ const SignUpPage = () => {
   const [profileImage, setProfileImage] = useState('');
   const [role, setRole] = useState('user');
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleSignup = async () => {
     if (!email || !password || !confirmPassword) {
-      alert('Please fill in all fields.');
+      setError('Email and password are required.');
       return;
     }
+  
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+  
+    // Validate password length and complexity
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      setError(
+        'Password must be 8+ characters with uppercase, lowercase, number, and special character.',
+      );
+      return;
+    }
+  
     if (password !== confirmPassword) {
-      alert('Passwords do not match.');
+      setError('Passwords do not match.');
       return;
     }
-
+  
+    setError('');
     setIsLoading(true);
     try {
-      const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+      // Create user in Firebase
+      const userCredential = await firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password);
       const userId = userCredential.user.uid;
-      setRole('user');
-      const firebaseProfileUrl = await saveImageToStorage(userId);
+  
+      // Send email verification
+      await userCredential.user.sendEmailVerification();
+      alert(
+        'A verification email has been sent to your email address. Please verify it before logging in.',
+      );
+  
+      // Use placeholder image if no profile image is provided
+      const firebaseProfileUrl = profileImage
+        ? await saveImageToStorage(userId)
+        : '';
+  
+      // Generate a new user ID
       const num = await generateUserId();
-
+  
+      // User data to save in Firestore
       const userData = {
         uid: userId,
-        fullName,
-        age,
-        sex,
-        country,
+        fullName: fullName || 'Anonymous',
+        age: age || 'Not specified',
+        sex: sex || 'Not specified',
+        country: country || 'Not specified',
         colorPassportNumber: num,
         email,
         profileImage: firebaseProfileUrl,
         role,
+        emailVerified: false, // Add this field to track verification status
       };
-
+  
+      // Save user data in Firestore
       await firestore.collection('Users').doc(userId).set(userData);
       await firestore.collection('ColorData').doc(userId).set(colorData);
-
-      navigation.navigate('Profile');
+  
+      // Navigate to a screen showing a message to verify their email
+      navigation.navigate('VerifyEmail');
     } catch (error) {
-      console.error(error);
-      alert('Signup failed. Please try again.');
+      console.error('Error during signup:', error);
+      setError('Signup failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
-
+  
   const saveImageToStorage = async (userId) => {
-    const uploadUri =
-      Platform.OS === 'ios' ? profileImage.replace('file://', '') : profileImage;
-
-    if (!uploadUri) {
-      console.error('Upload URI is null or undefined');
-      return;
+    if (!profileImage) {
+      console.log('No profile image provided. Skipping upload.');
+      return '';
     }
-
+  
+    // Normalize file URI for different platforms
+    const uploadUri =
+      Platform.OS === 'ios'
+        ? profileImage.replace('file://', '')
+        : profileImage;
+  
+    // Define the storage path for the profile image
     const fileName = `profileImages/${userId}.jpg`;
     const reference = firebase.storage().ref(fileName);
-
+  
+    console.log('Firebase storage reference created:', reference.fullPath);
+  
     try {
+      // Convert the file URI to a Blob
       const blob = await uriToBlob(uploadUri);
+      console.log('Blob created successfully:', blob);
+  
+      // Upload the blob to Firebase Storage
+      console.log('Starting upload to Firebase Storage...');
       await reference.put(blob);
-      return await reference.getDownloadURL();
+  
+      // Retrieve the download URL for the uploaded image
+      const downloadUrl = await reference.getDownloadURL();
+      console.log('File uploaded successfully. Download URL:', downloadUrl);
+  
+      return downloadUrl;
     } catch (error) {
-      console.error('Image upload error:', error);
-      throw error;
+      console.error('Image upload error:', error.code, error.message);
+  
+      // Provide a user-friendly error message
+      let errorMessage = 'An error occurred during image upload.';
+      if (error.code === 'storage/unauthorized') {
+        errorMessage = 'You do not have permission to upload this file.';
+      } else if (error.code === 'storage/quota-exceeded') {
+        errorMessage = 'Storage quota exceeded. Please contact support.';
+      } else if (error.code === 'storage/retry-limit-exceeded') {
+        errorMessage = 'Upload retries exceeded. Check your connection and try again.';
+      }
+  
+      throw new Error(errorMessage);
     }
   };
+  
+  // Helper function to convert URI to Blob
+  const uriToBlob = async (uri) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    console.log('Blob fetched from URI:', blob);
+    return blob;
+  };
+  
 
   const openImagePicker = async () => {
     const options = {
@@ -109,7 +183,7 @@ const SignUpPage = () => {
       maxHeight: 150,
       quality: 1,
     };
-    launchImageLibrary(options, async (response) => {
+    launchImageLibrary(options, async response => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.errorCode) {
@@ -124,25 +198,32 @@ const SignUpPage = () => {
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
           <DropDownBack />
           <Text style={styles.title}>Create your account</Text>
           <TouchableOpacity
             style={styles.avatarContainer}
-            onPress={openImagePicker}
-          >
+            onPress={openImagePicker}>
             <Image
               source={
                 profileImage
-                  ? { uri: profileImage }
+                  ? {uri: profileImage}
                   : require('../../assets/images/photo.png')
               }
               style={styles.avatar}
             />
           </TouchableOpacity>
+          {error ? (
+            <Text
+              style={[
+                styles.errorText,
+                {padding: 10, fontSize: 16, color: 'red'},
+              ]}>
+              {error}
+            </Text>
+          ) : null}
           <TextInput
             style={styles.input}
             placeholder="Full Name"
@@ -153,7 +234,7 @@ const SignUpPage = () => {
           <View style={styles.inlineInputContainer}>
             <TextInput
               style={[
-                { marginLeft: 36, marginRight: 5 },
+                {marginLeft: 36, marginRight: 5},
                 styles.input,
                 styles.inlineInput,
               ]}
@@ -163,21 +244,19 @@ const SignUpPage = () => {
               value={age}
             />
             <TextInput
-              style={[{ marginRight: 5 }, styles.input, styles.inlineInput]}
+              style={[{marginRight: 5}, styles.input, styles.inlineInput]}
               placeholder="Sex"
               placeholderTextColor="#bdb7b7"
               onChangeText={setSex}
               value={sex}
             />
             <TextInput
-              style={[{ marginRight: 35 }, styles.input, styles.inlineInput]}
+              style={[{marginRight: 35}, styles.input, styles.inlineInput]}
               placeholder="Country"
               placeholderTextColor="#bdb7b7"
               onChangeText={setCountry}
               value={country}
             />
-          </View>
-          <View style={styles.textContainer}>
           </View>
           <TextInput
             style={styles.input}
@@ -188,9 +267,7 @@ const SignUpPage = () => {
             keyboardType="email-address"
             autoCapitalize="none"
             textContentType="emailAddress"
-          />
-          <View style={styles.textContainer}>
-          </View>
+          />    
           <TextInput
             style={styles.input}
             placeholder="Password"
@@ -207,8 +284,13 @@ const SignUpPage = () => {
             onChangeText={setConfirmPassword}
             value={confirmPassword}
           />
-          <TouchableOpacity style={styles.buttonPrimary} onPress={handleSignup}>
-            <Text style={styles.buttonTextPrimary}>Submit</Text>
+          <TouchableOpacity
+            style={styles.buttonPrimary}
+            onPress={handleSignup}
+            disabled={isLoading}>
+            <Text style={styles.buttonTextPrimary}>
+              {isLoading ? 'Signing up...' : 'Submit'}
+            </Text>
           </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>

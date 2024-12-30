@@ -54,7 +54,7 @@ const ProfileAdmin = () => {
 
   return (
     <View style={styles.container}>
-      <DropDown title={'color passport'} />
+      <DropDown title="Color Passport" isHiddenArrow={true} />
       <ScrollView
         contentContainerStyle={[styles.scrollViewContent, { width: screenWidth }]}
         showsVerticalScrollIndicator={true}

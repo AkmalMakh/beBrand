@@ -11,7 +11,7 @@ const ColorBox = ({ color, onPress }) => {
       <View style={styles.boxContainer}>
         <View style={[styles.box, { backgroundColor: color.hex }]} />
         {/* Translate the color name */}
-        <Text style={styles.hexTextBox}>{t(color.name)}</Text>
+        <Text style={styles.hexTextBox}>{t(color.englishName)}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -42,7 +42,7 @@ const renderColorRow = (RowComponent, rowIndex, colors, columns, navigation, use
 
       const color = colors[colorIndex];
       // Ensure color is defined and has both hex and name properties
-      if (!color || !color.hex || !color.name) {
+      if (!color || !color.hex || !color.englishName) {
         return null;
       }
 

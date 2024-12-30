@@ -12,9 +12,9 @@ container: {
         marginBottom: 20,
       },
       avatar: {
-        width: 150,
-        height: 150,
-        borderRadius: 70,
+        width: 130,
+        height: 130,
+        borderRadius: 65,
         marginTop: 10,
       },
   title: {

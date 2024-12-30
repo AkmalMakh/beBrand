@@ -1,7 +1,6 @@
 import React, { useLayoutEffect } from 'react';
 import styles from '../styles/welcome';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 
 const WelcomePage = ({ navigation }) => {
   return (

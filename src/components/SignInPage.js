@@ -21,53 +21,78 @@ const SignInPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const forgotPassword = async () => {
     if (!email) {
-      alert('Please enter your email address.');
+      setErrorMessage('Please enter your email address.');
       return;
     }
 
     try {
+      setIsDisabled(true);
       await firebase.auth().sendPasswordResetEmail(email);
-      alert('A password reset email has been sent to your email address.');
+      setErrorMessage('A password reset email has been sent to your email address.');
     } catch (error) {
-      console.error(error);
+      console.error('Forgot Password Error:', error); // Log for debugging
       if (error.code === 'auth/user-not-found') {
-        alert('No user found with this email address.');
+        setErrorMessage('No user found with this email address.');
       } else if (error.code === 'auth/invalid-email') {
-        alert('The email address is not valid.');
+        setErrorMessage('The email address is not valid.');
       } else {
-        alert('An error occurred. Please try again.');
+        setErrorMessage('An error occurred. Please try again.');
       }
+    } finally {
+      setIsDisabled(false);
     }
   };
 
   const handleSignIn = async () => {
     if (!email || !password) {
-      alert('Please fill in all fields.');
+      setErrorMessage('Please fill in all fields.');
       return;
     }
-
+  
     setIsLoading(true);
-
+    setErrorMessage('');
+  
     try {
       await firebase.auth().signInWithEmailAndPassword(email, password);
-      const userId = firebase.auth().currentUser.uid;
+      const user = firebase.auth().currentUser;
+      const userId = user.uid;
       const userData = await firestore.collection('Users').doc(userId).get();
       const userRole = userData.data().role;
+      
+      if (!user.emailVerified && !userRole === 'admin') {
+        setErrorMessage('Your email is not verified. Please verify your email before signing in.');
+        return;
+      }
       if (userRole === 'admin') {
         navigation.navigate('ProfileAdmin');
       } else {
         navigation.navigate('Profile');
       }
     } catch (error) {
-      console.error(error);
-      alert('Login failed. Please check email or password');
+      console.error('Sign-In Error:', error); // Log for debugging
+      switch (error.code) {
+        case 'auth/invalid-credential':
+          setErrorMessage('Invalid credentials. Please try again.');
+          break;
+        case 'auth/user-not-found':
+          setErrorMessage('No user found with this email.');
+          break;
+        case 'auth/wrong-password':
+          setErrorMessage('Incorrect password. Please try again.');
+          break;
+        default:
+          setErrorMessage('An unexpected error occurred. Please try again later.');
+      }
     } finally {
       setIsLoading(false);
     }
   };
+  
 
   return (
     <KeyboardAvoidingView
@@ -78,6 +103,9 @@ const SignInPage = () => {
         <View style={styles.container}>
           <DropDownBack />
           <Text style={styles.title}>LOG IN</Text>
+          {errorMessage ? (
+            <Text style={styles.errorText}>{errorMessage}</Text> // Display friendly error messages
+          ) : null}
           <View style={styles.textContainer}>
             <Text style={styles.text}>E-mail</Text>
           </View>
@@ -85,9 +113,8 @@ const SignInPage = () => {
             style={styles.input}
             placeholder="jane@example.com"
             placeholderTextColor="#bdb7b7"
-            onChangeText={text => setEmail(text)}
+            onChangeText={(text) => setEmail(text)}
             value={email}
-            autoFocus={true}
           />
           <View style={styles.textContainer}>
             <Text style={styles.text}>Password</Text>
@@ -96,18 +123,23 @@ const SignInPage = () => {
             style={styles.input}
             placeholder="Password"
             placeholderTextColor="#bdb7b7"
-            secureTextEntry={true}
-            onChangeText={text => setPassword(text)}
+            secureTextEntry
+            onChangeText={(text) => setPassword(text)}
             value={password}
           />
           <Button
-            title="Forgot Password ?"
+            title="Forgot Password?"
             onPress={forgotPassword}
-            style={styles.title}
             color="blue"
           />
-          <TouchableOpacity style={styles.buttonPrimary} onPress={handleSignIn}>
-            <Text style={styles.buttonTextPrimary}>Sign In</Text>
+          <TouchableOpacity
+            style={styles.buttonPrimary}
+            onPress={handleSignIn}
+            disabled={isLoading} // Disable button during loading
+          >
+            <Text style={styles.buttonTextPrimary}>
+              {isLoading ? 'Signing In...' : 'Sign In'}
+            </Text>
           </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>
