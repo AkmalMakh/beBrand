@@ -64,7 +64,7 @@ const SignInPage = () => {
       const userData = await firestore.collection('Users').doc(userId).get();
       const userRole = userData.data().role;
       
-      if (!user.emailVerified && !userRole === 'admin') {
+      if (!user.emailVerified || !userRole === 'admin') {
         setErrorMessage('Your email is not verified. Please verify your email before signing in.');
         return;
       }
