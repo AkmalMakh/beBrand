@@ -35,6 +35,9 @@
 	<string></string>
 	<key>UILaunchStoryboardName</key>
 	<string>BootSplash</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need access to your photo library to allow you to upload your profile or choose images.</string>
+
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
